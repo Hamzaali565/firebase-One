@@ -1,0 +1,59 @@
+.Container{
+    margin-top: 40px;
+}
+h1{
+    display: flex;
+    justify-content: center;
+    font-size: 50px;
+    margin-top: 10px;
+}
+.inBut{
+    display: flex;
+    justify-content: center;
+}
+.inBut>form>textarea{
+width: 400px;
+padding: 10px;
+border: 3px solid gray;
+border-radius: 10px;
+}
+.butt{
+    margin-left: 180px;
+    margin-top: 20px;
+    /* background-color: black; */
+}
+.butt>button{
+    padding: 13px 20px 13px 20px;
+    border-radius: 10px;
+    background-color: gray;
+    color: white;
+    border: none;
+}
+.allPosts{
+    margin-top: 30px;
+}
+.MainPost{
+    /* margin-top: 30px; */
+    display: flex;
+    justify-content: center;
+}
+.post{
+    border: 3px solid black;
+    border-radius: 20px;
+background-color: gray;
+    margin: 10px;
+    width: 600px;
+    padding: 6px;
+}
+.dit>button{
+    padding: 13px 20px 13px 20px;
+    border-radius: 10px;
+    background-color: gray;
+    color: white;
+    border: none;
+
+}
+.dit>button:hover{
+    color: white;
+    background-color: black;
+}
