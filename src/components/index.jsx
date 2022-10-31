@@ -32,6 +32,8 @@ const db = getFirestore(app);
 const Combo = () => {
     const [postText, setPostText] = useState("");
     const [posts, setPosts] = useState([]);
+    const [isEditing, setIsEditing] = useState(null);
+    const [isEditingText, setIsEditingText] = useState("")
 
     useEffect(() => {
         // const getData = async () => {
@@ -84,7 +86,7 @@ const Combo = () => {
             const docRef =
                 await addDoc(collection(db, "posts"), {
                     text: postText,
-                    createdOn: moment(new Date().getTime()).fromNow(),
+                    createdOn: serverTimestamp(),
                 });
             console.log("Document written with ID: ", docRef.id);
         } catch (e) {
@@ -98,15 +100,21 @@ const Combo = () => {
         console.log(postId);
     };
 
-    const updatePost = async (postId, updatedText) => {
-
+    const updatePost = async (e) => {
+        e.preventDefault();
 
         // Set the "capital" field of the city 'DC'
-        await updateDoc(doc(db, "posts", postId), {
-            text: updatedText
+        await updateDoc(doc(db, "posts", isEditing), {
+            text: isEditingText
         });
+        setIsEditing(null);
+        setIsEditingText("");
 
-    }
+    };
+    // const Edit = (postId, text) => {
+    //     setIsEditing(postId),
+    //     setIsEditingText(text)
+    // };
 
     return (
         <div >
@@ -132,23 +140,52 @@ const Combo = () => {
 
                     {posts.map((eachpost, i) => (
                         <div className="MainPost" key={i}><div className="post">
-                            <h3>{(eachpost.isEditing) ? <input type="text"/>: eachpost.text }</h3>
-                            <p>{eachpost.createdOn}</p>
+
+
+                            <h3>{(eachpost.id === isEditing)
+                                ? <form onSubmit={updatePost}>
+                                    <input
+                                        type="text"
+                                        value={isEditingText}
+                                        onChange={(e) => {
+                                            setIsEditingText(e.target.value)
+                                        }}
+                                        placeholder="Write Something"
+                                    />
+                                    <button type="submit">update</button>
+                                </form>
+                                : eachpost.text}</h3>
+
+
+                            <p>{
+                                moment(
+                                    (eachpost?.createdOn?.seconds) ?
+                                        eachpost?.createdOn?.seconds * 1000
+                                        :
+                                        undefined
+                                )
+                                    .fromNow()
+                                // .format ('Do MMMM, h:mm a ')
+                            }</p>
                             <div className="dit">
                                 <button onClick={() => {
                                     deletepost(eachpost.id)
                                 }}
                                 >Delete</button>
+
+
                                 <button onClick={() => {
-                                    const updatedState =
-                                        posts.map(eachItems => {
-                                            if (eachItems.id === eachpost?.id) {
-                                                return { ...eachItems, isEditing: !eachItems.isEditing }
-                                            } else {
-                                                return eachItems
-                                            }
-                                        })
-                                    setPosts(updatedState);
+                                   setIsEditing(eachpost?.id)
+                                   setIsEditingText(eachpost?.text)
+                                    // const updatedState =
+                                    //     posts.map(eachItems => {
+                                    //         if (eachItems.id === eachpost?.id) {
+                                    //             return { ...eachItems, isEditing: !eachItems.isEditing }
+                                    //         } else {
+                                    //             return eachItems
+                                    //         }
+                                    //     })
+                                    // setPosts(updatedState);
                                 }}
                                 >Edit</button>
                             </div>
